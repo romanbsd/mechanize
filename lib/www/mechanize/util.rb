@@ -58,16 +58,22 @@ module WWW
         end
 
         def detect_charset(src)
-          tmp = NKF.guess(src || "<html></html>")
-          if RUBY_VERSION >= "1.9.0"
-            enc = tmp.to_s.upcase
+          src ||= '<html></html>'
+          if (m = src.slice(0,1000).match(%r{<meta.*http-equiv\s*=\s*['"]?Content-Type['"]?.*?>}mi)) and
+            m[0].match(%r{content=['"]text/html.*?charset=(.*?)['"]}mi)
+            $1.upcase
           else
-            enc = NKF.constants.find{|c|
-              NKF.const_get(c) == tmp
-            }
-            enc = CODE_DIC[enc.intern]
+            tmp = NKF.guess(src)
+            if RUBY_VERSION >= "1.9.0"
+              enc = tmp.to_s.upcase
+            else
+              enc = NKF.constants.find{|c|
+                NKF.const_get(c) == tmp
+              }
+              enc = CODE_DIC[enc.intern]
+            end
+            enc || "ISO-8859-1"
           end
-          enc || "ISO-8859-1"
         end
 
       end

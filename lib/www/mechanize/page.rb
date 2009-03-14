@@ -52,7 +52,7 @@ module WWW
         if body && response
           html_body = body.length > 0 ? body : '<html></html>'
           if WWW::Mechanize.html_parser == Nokogiri::HTML
-            @parser = Mechanize.html_parser.parse(html_body, nil, @encoding)
+            @parser = Mechanize.html_parser.parse(html_body, nil, 'UTF-8')
           else
             @parser = Mechanize.html_parser.parse(html_body)
           end

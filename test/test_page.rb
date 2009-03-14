@@ -23,6 +23,11 @@ class TestPage < Test::Unit::TestCase
     assert_equal 'UTF-8', page.encoding
   end
 
+  def test_page_gets_charset_from_page
+    page = @agent.get("http://localhost/tc_charset.html")
+    assert_equal 'WINDOWS-1255', page.encoding
+  end
+
   def test_set_encoding
     page = @agent.get("http://localhost/file_upload.html")
     page.encoding = 'UTF-8'
